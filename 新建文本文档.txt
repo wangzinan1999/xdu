@@ -1,0 +1,47 @@
+// 添加电子元件记录
+int add_device(struct device *d, struct device add) {
+	strcpy(d[len].id, add.id);
+	strcpy(d[len].name, add.name);
+	d[len].price = add.price;
+	strcpy(d[len].attr1, add.attr1);
+	strcpy(d[len].attr2, add.attr2);
+	d[len].out_month = add.out_month;
+	len = len + 1;
+	return len;
+}
+
+// 加载本地电子元件记录（电子元器件入库）
+int load_device(char *file_name, struct device *d) {
+	char str[100];
+	FILE *fp = fopen(file_name, "r");
+	struct device tp;
+	if (fp == NULL) {
+		printf("\t\t机房管理文件不存在\n");
+		return -1;
+	}
+	while (fscanf(fp, "%s\t%s\t%lf\t%s\t%s\t%d\n", tp.id, tp.name, &tp.price,
+		tp.attr1, tp.attr2, &tp.out_month) != EOF) {
+		len = add_device(d, tp);
+	}
+	fclose(fp);
+	return len;
+}
+
+// 电子元器件出库
+void out_device(struct device *d, char *str) {
+	int i = 0;
+	int flag = 0;
+	for (i = 0; i < len; i++) {
+		if (strcmp(d[i].id, str) == 0) {
+			flag = 1;
+			break;
+		}
+	}
+	if (flag == 0 || d[i].out_month != 0) {
+		printf("\t\t抱歉，目前库房不存在该电子元件，电子元件出库失败\n");
+		return;
+	}
+	printf("\t\t请输入该电子元器件出库的月份:");
+	scanf("%d", &d[i].out_month);
+	printf("\t\t恭喜，该电子元件出库成功\n");
+}
